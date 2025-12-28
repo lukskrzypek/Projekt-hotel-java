@@ -9,14 +9,6 @@ skinparam linetype ortho
 
 title Diagram Klas: System Rezerwacji Hotelowej (Java context)
 
-' Definicje Enumów
-enum ReservationStatus {
-  CONFIRMED
-  CANCELLED
-  PENDING
-  COMPLETED
-}
-
 ' Klasy bazowe i abstrakcyjne
 abstract class AdditionalService {
   - String serviceName
@@ -71,6 +63,7 @@ class Reservation {
   - LocalDate checkInDate
   - LocalDate checkOutDate
   - LocalDateTime createdAt
+  - String reservationStatus
   + calculateTotalCost(): double
   + confirm()
   + cancel()
@@ -87,9 +80,6 @@ Guest "1" -- "*" Reservation : makes >
 
 ' Rezerwacja dotyczy konkretnego pokoju
 Reservation "*" --> "1" Room : books >
-
-' Rezerwacja ma status (użycie enuma)
-Reservation --> ReservationStatus : has status >
 
 ' Rezerwacja zawiera listę usług dodatkowych (Agregacja)
 Reservation "1" o-- "*" AdditionalService : includes services >
