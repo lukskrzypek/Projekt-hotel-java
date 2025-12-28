@@ -1,3 +1,4 @@
+```
 @startuml
 
 ' Ustawienia stylistyczne, aby diagram wyglądał nowocześnie
@@ -94,3 +95,4 @@ Reservation --> ReservationStatus : has status >
 Reservation "1" o-- "*" AdditionalService : includes services >
 
 @enduml
+```
