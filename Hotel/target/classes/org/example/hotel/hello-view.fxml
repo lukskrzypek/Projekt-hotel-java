@@ -15,21 +15,21 @@
     <HBox spacing="20" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
         <VBox spacing="5">
             <Label text="Wybierz piętro:"/>
-            <ComboBox  prefWidth="150"/>
+            <ComboBox fx:id="floorComboBox" prefWidth="150"/>
         </VBox>
 
         <VBox spacing="5">
             <Label text="Data podglądu:"/>
-            <DatePicker/>
+            <DatePicker fx:id ="viewDatePicker"/>
         </VBox>
 
-        <Button text="Zarezerwuj" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+        <Button text="Zarezerwuj" onAction="#handleOpenBookingDialog" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
     </HBox>
 
     <Separator/>
 
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-        <FlowPane  hgap="15" vgap="15" alignment="CENTER" prefWrapLength="600">
+        <FlowPane  fx:id = "roomsContainer" hgap="15" vgap="15" alignment="CENTER" prefWrapLength="600">
             <padding>
                 <Insets top="20" bottom="20"/>
             </padding>

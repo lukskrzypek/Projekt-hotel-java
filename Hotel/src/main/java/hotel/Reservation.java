@@ -42,6 +42,14 @@ public class Reservation {
         return total;
     }
 
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
+
     public Room getRoom() { return room; }
     public Guest getGuest() { return guest; }
     public String getReservationId() { return reservationId; }
