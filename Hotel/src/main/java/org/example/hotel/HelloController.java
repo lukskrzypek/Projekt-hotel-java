@@ -2,10 +2,18 @@ package org.example.hotel;
 
 import hotel.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class HelloController {
     @FXML private ComboBox<Integer> floorComboBox;
@@ -18,8 +26,8 @@ public class HelloController {
     public void initialize() {
 
         viewDatePicker.setOnAction(e -> renderMap());
-        floorComboBox.getItems().addAll(0, 1);
-        floorComboBox.setValue(0);
+        floorComboBox.getItems().setAll(manager.getFloors());
+        floorComboBox.getSelectionModel().selectFirst();
         viewDatePicker.setValue(LocalDate.now());
 
         // Akcja przy zmianie piętra
@@ -35,7 +43,7 @@ public class HelloController {
         LocalDate selectedDate = viewDatePicker.getValue(); // Pobiera datę z kalendarza na mapie
 
         for (Room room : manager.getRoomsForFloor(selectedFloor)) {
-            Button roomButton = new Button("Pokój " + room.getRoomNumber()+ "-osobowy" + "\n" +
+            Button roomButton = new Button("Pokój nr. " + room.getRoomNumber()+ "\n"+room.getRoomType().getMaxCapacity()+" osobowy" + "\n" +
                     room.getRoomType().getTypeName());
             roomButton.setPrefSize(130, 100);
             roomButton.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
@@ -53,75 +61,36 @@ public class HelloController {
         }
     }
 
-    @FXML
-    private void handleOpenBookingDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Nowa Rezerwacja");
-        dialog.setHeaderText("Wprowadź dane pobytu");
+    //Otwieranie nowego okna do rezerwacji
+    public void openNewReservationWindow() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("NewReservation.fxml"));
 
-        // Elementy GUI
-        DatePicker dateFrom = new DatePicker(LocalDate.now());
-        DatePicker dateTo = new DatePicker(LocalDate.now().plusDays(1));
+        Parent root = loader.load();
+        NewReservationController secondaryController = loader.getController();
+        secondaryController.setMainController(this);
+        secondaryController.setManager(this.manager);
 
-        ComboBox<String> guestNameCombo = new ComboBox<>();
-        guestNameCombo.setEditable(true);
-        guestNameCombo.setPromptText("Imię i Nazwisko gościa");
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Dodaj nową rezerwację");
+        stage.show();
 
-        ComboBox<Room> roomCombo = new ComboBox<>();
-        roomCombo.getItems().addAll(manager.getRoomsForFloor(floorComboBox.getValue()));
-        roomCombo.setPromptText("Wybierz pokój");
-
-        CheckBox spaBox = new CheckBox("Dodaj wejście do SPA (SpaEntry)");
-        CheckBox mealBox = new CheckBox("Dodaj pakiet wyżywienia (MealPackage)");
-
-        roomCombo.setConverter(new javafx.util.StringConverter<Room>() {
-            @Override
-            public String toString(Room room) {
-                return (room == null) ? "" : "Pokój " + room.getRoomNumber() + " (" + room.getRoomType().getTypeName() + ")";
-            }
-
-            @Override
-            public Room fromString(String string) {
-                return null; // Niepotrzebne przy samym wyświetlaniu
-            }
-        });
-
-        VBox layout = new VBox(10,
-                new Label("Od:"), dateFrom,
-                new Label("Do:"), dateTo,
-                new Label("Gość:"), guestNameCombo,
-                new Label("Pokój:"), roomCombo,
-                new Separator(),
-                new Label("Dodatki:"),
-                spaBox, mealBox
-        );
-        layout.setPadding(new javafx.geometry.Insets(20));
-        dialog.getDialogPane().setContent(layout);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK && roomCombo.getValue() != null) {
-                Room room = roomCombo.getValue();
-                String guestName = guestNameCombo.getEditor().getText();
-
-                // 1. Tworzymy obiekt rezerwacji
-                Reservation res = new Reservation(
-                        "ID-" + System.currentTimeMillis(),
-                        room,
-                        new Guest(guestName, "", ""),
-                        dateFrom.getValue(),
-                        dateTo.getValue()
-                );
-
-                // 2. Dodajemy do managera
-                manager.addReservation(res);
-
-                room.occupy();
-
-                renderMap();
-
-                System.out.println("Zarezerwowano pokój " + room.getRoomNumber() + " dla " + guestName);
-            }
-        });
+        //Ustawienie na sztywno odpowiedniej wielkości okna
+        stage.setResizable(false);
+        stage.setMinWidth(400);
+        stage.setMaxWidth(400);
+        stage.setMinHeight(600);
+        stage.setMaxHeight(600);
     }
+
+    public void dodajRezerwacje(Reservation reservation, Room room) {
+        manager.addReservation(reservation);
+        room.occupy();
+        renderMap();
+    }
+
+    public HotelManager getManager() {
+        return manager;
+    }
+
 }

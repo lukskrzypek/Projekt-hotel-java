@@ -6,15 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reservation {
-    private String reservationId;
     private Room room;
     private Guest guest;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private List<AdditionalService> services;
 
-    public Reservation(String reservationId, Room room, Guest guest, LocalDate checkInDate, LocalDate checkOutDate) {
-        this.reservationId = reservationId;
+    public Reservation(Room room, Guest guest, LocalDate checkInDate, LocalDate checkOutDate) {
         this.room = room;
         this.guest = guest;
         this.checkInDate = checkInDate;
@@ -52,5 +50,4 @@ public class Reservation {
 
     public Room getRoom() { return room; }
     public Guest getGuest() { return guest; }
-    public String getReservationId() { return reservationId; }
 }

@@ -5,7 +5,6 @@ public class Guest {
     private String lastName;
     private String email;
     private String phoneNumber;
-    private Long id;
 
     public Guest(String firstName, String lastName, String email) {
         this.firstName = firstName;

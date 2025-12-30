@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="500.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.hotel.NewReservationController">
+    <padding>
+        <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+    </padding>
+    <children>
+        <Label text="Wprowadź dane pobytu">
+            <font>
+                <Font size="16.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" />
+            </VBox.margin>
+        </Label>
+
+        <VBox spacing="5.0">
+            <children>
+                <Label text="Ilość dób hotelowych:" />
+                <TextField fx:id="dayCountTextField" editable="false" focusTraversable="false" prefWidth="150.0" text="0" />
+            </children>
+        </VBox>
+
+        <GridPane vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Od:" />
+                        <DatePicker fx:id="datePickerFrom" maxWidth="1.7976931348623157E308" onAction="#daysCountRefresh" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="Do:" />
+                        <DatePicker fx:id="datePickerTo" maxWidth="1.7976931348623157E308" onAction="#daysCountRefresh" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0" GridPane.rowIndex="2">
+                    <children>
+                        <Label text="Gość:" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <ComboBox fx:id="guestComboBox" maxWidth="1.7976931348623157E308" promptText="Imię i Nazwisko gościa" HBox.hgrow="ALWAYS" />
+                                <Button minWidth="100.0" mnemonicParsing="false" text="Dodaj gościa" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0" GridPane.rowIndex="3">
+                    <children>
+                        <HBox spacing="10.0">
+                            <children>
+                                <VBox spacing="5.0" prefWidth="50.0" minWidth="50.0" maxWidth="50.0">
+                                    <children>
+                                        <Label text="Pietro:" />
+                                        <ComboBox fx:id="floorComboBox" maxWidth="1.7976931348623157E308" onAction="#roomComboBoxRefresh"/>
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Pokój:" />
+                                        <ComboBox fx:id="roomComboBox" maxWidth="1.7976931348623157E308"  />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="10.0" GridPane.rowIndex="4">
+                    <children>
+                        <Label text="Dodatki:" />
+                        <CheckBox mnemonicParsing="false" text="Dodaj wejście do SPA (SpaEntry)" />
+
+                        <CheckBox fx:id="mealPackageCheckBox" mnemonicParsing="false" text="Dodaj pakiet wyżywienia (MealPackage)" />
+
+                        <CheckBox fx:id="vegetarianCheckBox" disable="${!mealPackageCheckBox.selected}" mnemonicParsing="false" text="Wegetariański">
+                            <VBox.margin>
+                                <Insets left="20.0" /> </VBox.margin>
+                        </CheckBox>
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <children>
+                <Label text="Koszt:">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="priceTextField" editable="false" prefWidth="150.0" text="0.00 PLN" />
+            </children>
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="20.0">
+            <children>
+                <Button minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="OK" onAction="#addReservation"/>
+                <Button minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="Cancel" />
+            </children>
+            <VBox.margin>
+                <Insets top="15.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>
