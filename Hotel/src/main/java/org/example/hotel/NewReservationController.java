@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.time.LocalDate;
@@ -114,6 +115,9 @@ public class NewReservationController {
     private void addReservation(){
         Reservation res = new Reservation(roomComboBox.getValue(),guestComboBox.getValue(),datePickerFrom.getValue(),datePickerTo.getValue());
         mainController.dodajRezerwacje(res,roomComboBox.getValue());
+
+        Stage stage = (Stage) roomComboBox.getScene().getWindow();
+        stage.close();
     }
 
 
