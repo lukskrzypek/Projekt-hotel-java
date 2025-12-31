@@ -1,13 +1,8 @@
 package org.example.hotel;
 
-import hotel.Guest;
-import hotel.HotelManager;
-import hotel.Reservation;
-import hotel.Room;
+import hotel.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -17,6 +12,11 @@ import java.util.List;
 
 public class NewReservationController {
 
+    @FXML private TextField priceTextField;
+    @FXML private ToggleGroup spaDurationGroup;
+    @FXML private CheckBox spaCheckBox;
+    @FXML private CheckBox mealPackageCheckBox;
+    @FXML private CheckBox vegetarianCheckBox;
     @FXML private ComboBox<Guest> guestComboBox;
     @FXML private TextField dayCountTextField;
     @FXML private DatePicker datePickerFrom;
@@ -73,7 +73,6 @@ public class NewReservationController {
             setDateDefault();
         }
         roomComboBoxRefresh();
-
     }
 
     //Zmiana nazwy wyświetlanej w combobx na 'Pokój nr ...'
@@ -108,17 +107,64 @@ public class NewReservationController {
         List<Room> availableRooms = allRoomsOnFloor.stream().filter(room -> roomFreeFromTo(room)).toList();
         roomComboBox.getItems().setAll(availableRooms);
         roomComboBox.getSelectionModel().selectFirst();
+        priceRefresh();
     }
+    //Tymczasowa rezerwacja po to aby na biezaco obliczać koszty, przy okazji wykozystywana do koncowej rezerwacji
+    private Reservation newReservationTemp(){
+        try {
+            Reservation res = new Reservation(roomComboBox.getValue(),guestComboBox.getValue(),datePickerFrom.getValue(),datePickerTo.getValue());
+
+            //Dodatkowe uslugi
+            //spa
+            if (spaCheckBox.isSelected()){
+                Toggle selectedToggle = spaDurationGroup.getSelectedToggle();
+                Integer time = (Integer) selectedToggle.getUserData();
+                double price = 2*time;
+                SpaEntry spa = new SpaEntry("Spa", price,time );
+                res.addService(spa);
+            }
+            //posilek
+            if (mealPackageCheckBox.isSelected()){
+                if(vegetarianCheckBox.isSelected()){
+                    double price = 70;
+                    MealPackage mealPackage = new MealPackage("Vege",price,true);
+                    res.addService(mealPackage);
+                }else{
+                    double price = 50;
+                    MealPackage mealPackage = new MealPackage("Standard",price,false);
+                    res.addService(mealPackage);
+                }
+            }
+            return res;
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
+    //wyswietlanie ceny
+    @FXML
+    private void priceRefresh(){
+        Reservation res = newReservationTemp();
+        res.calculateTotalCost();
+        priceTextField.setText(res.calculateTotalCost()*Integer.parseInt(dayCountTextField.getText()) + " PLN");
+
+    }
+
 
     //Dodwanie rezerwacji
     @FXML
     private void addReservation(){
-        Reservation res = new Reservation(roomComboBox.getValue(),guestComboBox.getValue(),datePickerFrom.getValue(),datePickerTo.getValue());
+        Reservation res=newReservationTemp();
         mainController.dodajRezerwacje(res,roomComboBox.getValue());
-
         Stage stage = (Stage) roomComboBox.getScene().getWindow();
         stage.close();
     }
 
+    @FXML
+    private void cancelReservation(){
+        Stage stage = (Stage) roomComboBox.getScene().getWindow();
+        stage.close();
+    }
 
 }

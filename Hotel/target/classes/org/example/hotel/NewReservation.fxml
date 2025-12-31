@@ -5,6 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import java.lang.Double?>
+<?import java.lang.Integer?>
 <VBox prefHeight="500.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.hotel.NewReservationController">
     <padding>
         <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
@@ -89,13 +91,41 @@
                 <VBox spacing="10.0" GridPane.rowIndex="4">
                     <children>
                         <Label text="Dodatki:" />
-                        <CheckBox mnemonicParsing="false" text="Dodaj wejście do SPA (SpaEntry)" />
 
-                        <CheckBox fx:id="mealPackageCheckBox" mnemonicParsing="false" text="Dodaj pakiet wyżywienia (MealPackage)" />
+                        <CheckBox fx:id="spaCheckBox" mnemonicParsing="false" text="Dodaj wejście do SPA (SpaEntry)" />
+                        <fx:define>
+                            <ToggleGroup fx:id="spaDurationGroup" />
+                        </fx:define>
+                        <HBox spacing="15.0" disable="${!spaCheckBox.selected}">
+                            <padding>
+                                <Insets left="20.0" />
+                            </padding>
+                            <children>
+                                <RadioButton fx:id="spa30min" mnemonicParsing="false" selected="true" text="30 min" toggleGroup="$spaDurationGroup" onAction="#priceRefresh">
+                                    <userData>
+                                        <Integer fx:value="30" />
+                                    </userData>
+                                </RadioButton>
 
-                        <CheckBox fx:id="vegetarianCheckBox" disable="${!mealPackageCheckBox.selected}" mnemonicParsing="false" text="Wegetariański">
+                                <RadioButton fx:id="spa1h" mnemonicParsing="false" text="1h" toggleGroup="$spaDurationGroup" onAction="#priceRefresh">
+                                    <userData>
+                                        <Integer fx:value="60" />
+                                    </userData>
+                                </RadioButton>
+
+                                <RadioButton fx:id="spa2h" mnemonicParsing="false" text="2h" toggleGroup="$spaDurationGroup" onAction="#priceRefresh">
+                                    <userData>
+                                        <Integer fx:value="120" />
+                                    </userData>
+                                </RadioButton>
+                            </children>
+                        </HBox>
+
+                        <CheckBox fx:id="mealPackageCheckBox" mnemonicParsing="false" text="Dodaj pakiet wyżywienia (MealPackage)" onAction="#priceRefresh"/>
+                        <CheckBox fx:id="vegetarianCheckBox" disable="${!mealPackageCheckBox.selected}" mnemonicParsing="false" text="Wegetariański" onAction="#priceRefresh">
                             <VBox.margin>
-                                <Insets left="20.0" /> </VBox.margin>
+                                <Insets left="20.0" />
+                            </VBox.margin>
                         </CheckBox>
                     </children>
                 </VBox>
@@ -119,7 +149,7 @@
         <HBox alignment="CENTER" spacing="20.0">
             <children>
                 <Button minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="OK" onAction="#addReservation"/>
-                <Button minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="Cancel" />
+                <Button minWidth="100.0" mnemonicParsing="false" prefHeight="30.0" text="Cancel" onAction="#cancelReservation" />
             </children>
             <VBox.margin>
                 <Insets top="15.0" />
