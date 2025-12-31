@@ -92,7 +92,7 @@
                     <children>
                         <Label text="Dodatki:" />
 
-                        <CheckBox fx:id="spaCheckBox" mnemonicParsing="false" text="Dodaj wejście do SPA (SpaEntry)" />
+                        <CheckBox fx:id="spaCheckBox" mnemonicParsing="false" text="Dodaj wejście do SPA (SpaEntry)" onAction="#priceRefresh" />
                         <fx:define>
                             <ToggleGroup fx:id="spaDurationGroup" />
                         </fx:define>
