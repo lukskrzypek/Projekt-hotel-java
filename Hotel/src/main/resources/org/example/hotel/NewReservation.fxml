@@ -60,7 +60,7 @@
                         <HBox spacing="10.0">
                             <children>
                                 <ComboBox fx:id="guestComboBox" maxWidth="1.7976931348623157E308" promptText="Imię i Nazwisko gościa" HBox.hgrow="ALWAYS" />
-                                <Button minWidth="100.0" mnemonicParsing="false" text="Dodaj gościa" />
+                                <Button minWidth="100.0" mnemonicParsing="false" text="Dodaj gościa" onAction="#openNewGuestWindow" />
                             </children>
                         </HBox>
                     </children>

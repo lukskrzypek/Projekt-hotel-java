@@ -88,9 +88,4 @@ public class HelloController {
         room.occupy();
         renderMap();
     }
-
-    public HotelManager getManager() {
-        return manager;
-    }
-
 }

@@ -2,10 +2,14 @@ package org.example.hotel;
 
 import hotel.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -167,4 +171,22 @@ public class NewReservationController {
         stage.close();
     }
 
+
+    @FXML
+    private void openNewGuestWindow() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("NewGuest.fxml"));
+        Parent root = loader.load();
+
+        NewGuestController guestController = loader.getController();
+        guestController.setManager(this.manager);
+        guestController.setReservationController(this);
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Nowy Gość");
+
+        //blokuje okno pod spodem
+        stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        stage.show();
+    }
 }
