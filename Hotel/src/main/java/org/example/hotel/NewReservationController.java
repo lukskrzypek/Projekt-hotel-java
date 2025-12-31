@@ -52,10 +52,6 @@ public class NewReservationController {
         setDateDefault();
         roomNameConverter();
 
-        //Testowi goście
-        Guest testowyGosc = new Guest("Jan", "Kowalski", "jan.kowalski@example.com");
-        Guest testowyGosc2 = new Guest("Anna", "Nowak", "anna.nowak@example.com");
-        guestComboBox.getItems().setAll(testowyGosc, testowyGosc2);
 
     }
 
@@ -77,6 +73,7 @@ public class NewReservationController {
             setDateDefault();
         }
         roomComboBoxRefresh();
+        priceRefresh();
     }
 
     //Zmiana nazwy wyświetlanej w combobx na 'Pokój nr ...'
@@ -94,23 +91,48 @@ public class NewReservationController {
 
     //Sprawdza czy pokój jest wolny przez wszystkie dni wybrane w rezerwacji
     private boolean roomFreeFromTo(Room room) {
-        int iloscDob = Integer.parseInt(dayCountTextField.getText());
-        for (int i = 0; i < iloscDob; i++) {
-            if(manager.isRoomOccupiedOn(room, datePickerTo.getValue().plusDays(i))){
-                return false;
+        LocalDate start = datePickerFrom.getValue();
+        LocalDate end = datePickerTo.getValue();
+
+        if (start == null || end == null) return false;
+
+        // Obliczamy liczbę dni do sprawdzenia (różnica + 1, aby objąć też dzień wyjazdu)
+        long totalDays = ChronoUnit.DAYS.between(start, end) + 1;
+
+        for (int i = 0; i < totalDays; i++) {
+            LocalDate dateToCheck = start.plusDays(i);
+            // Pytamy managera, czy pokój jest zajęty w tym konkretnym dniu
+            if (manager.isRoomOccupiedOn(room, dateToCheck)) {
+                return false; // Jeśli choć jeden dzień jest zajęty, pokój jest niedostępny
             }
         }
-        return true;
+        return true; // Wszystkie dni są wolne
     }
 
     @FXML
     private void roomComboBoxRefresh() {
+        Room previouslySelectedRoom = roomComboBox.getValue();
+
         List<Room> allRoomsOnFloor = manager.getRoomsForFloor(floorComboBox.getValue());
 
-        // Filtrowanie dostępnych pokojów
-        List<Room> availableRooms = allRoomsOnFloor.stream().filter(room -> roomFreeFromTo(room)).toList();
+        // 2. Sprawdzamy, ilu gości mamy obecnie na liście w ComboBoxie
+        int currentGuestCount = guestComboBox.getItems().size();
+
+        // 3. Filtrowanie z nowym warunkiem dotyczącym pojemności (maxCapacity)
+        List<Room> availableRooms = allRoomsOnFloor.stream()
+                .filter(room -> roomFreeFromTo(room)) // Warunek 1: Czy wolny w terminie
+                .filter(room -> room.getRoomType().getMaxCapacity() >= currentGuestCount) // Warunek 2: Czy pomieści obecnych gości
+                .toList();
+
         roomComboBox.getItems().setAll(availableRooms);
-        roomComboBox.getSelectionModel().selectFirst();
+
+        if (previouslySelectedRoom != null && availableRooms.contains(previouslySelectedRoom)) {
+            // Jeśli wcześniej wybrany pokój nadal jest na liście (i pasuje do liczby osób), wybierz go ponownie
+            roomComboBox.getSelectionModel().select(previouslySelectedRoom);
+        } else {
+            // Jeśli pokoju nie ma na liście (bo np. zmieniliśmy piętro lub jest za mały), wybierz pierwszy dostępny
+            roomComboBox.getSelectionModel().selectFirst();
+        }
         priceRefresh();
     }
     //Tymczasowa rezerwacja po to aby na biezaco obliczać koszty, przy okazji wykozystywana do koncowej rezerwacji
@@ -174,6 +196,19 @@ public class NewReservationController {
 
     @FXML
     private void openNewGuestWindow() throws IOException {
+        Room selectedRoom = roomComboBox.getValue();
+
+        int limit = selectedRoom.getRoomType().getMaxCapacity();
+        int currentGuests = guestComboBox.getItems().size();
+
+        if (currentGuests >= limit) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "Ten pokój pomieści maksymalnie " + limit + " osób!");
+            alert.show();
+            return;
+        }
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("NewGuest.fxml"));
         Parent root = loader.load();
 
@@ -186,7 +221,14 @@ public class NewReservationController {
 
         //blokuje okno pod spodem
         stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-
         stage.show();
+    }
+
+    @FXML
+    public void addNewGuestToList(Guest guest){
+        guestComboBox.getItems().add(guest);
+        guestComboBox.getSelectionModel().select(guest);
+
+        roomComboBoxRefresh();
     }
 }

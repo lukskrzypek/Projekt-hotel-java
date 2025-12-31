@@ -10,15 +10,13 @@ import javafx.scene.layout.FlowPane;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class HelloController {
     @FXML private ComboBox<Integer> floorComboBox;
     @FXML private DatePicker viewDatePicker;
     @FXML private FlowPane roomsContainer; // To jest ten szary obszar z FXML
+    @FXML public Button listaRezerwacjiButton;
 
     private HotelManager manager = new HotelManager();
 
@@ -87,5 +85,20 @@ public class HelloController {
         manager.addReservation(reservation);
         room.occupy();
         renderMap();
+    }
+
+    @FXML
+    public void openReservationList() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReservationList.fxml"));
+        Parent root = loader.load();
+
+        ReservationListController controller = loader.getController();
+        // Przekazujemy listę wszystkich rezerwacji z managera
+        controller.setReservations(manager.getAllReservations());
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Wykaz wszystkich rezerwacji");
+        stage.show();
     }
 }

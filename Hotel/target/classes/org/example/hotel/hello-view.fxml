@@ -23,6 +23,7 @@
         </VBox>
 
         <Button onAction="#openNewReservationWindow" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" text="Zarezerwuj" />
+        <Button fx:id="listaRezerwacjiButton" onAction="#openReservationList" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" text="Lista Rezerwacji" />
     </HBox>
 
     <Separator />

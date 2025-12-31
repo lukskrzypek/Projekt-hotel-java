@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.hotel.ReservationListController" prefWidth="800" prefHeight="400" style="-fx-padding: 20;">
+
+    <Label text="Wykaz Rezerwacji" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="reservationTable"  VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colRoom" text="Pokój"/>
+            <TableColumn fx:id="colGuest" text="Główny Gość" prefWidth="300"/>
+            <TableColumn fx:id="colFrom" text="Od" prefWidth="120"/>
+            <TableColumn fx:id="colTo" text="Do" prefWidth="120"/>
+            <TableColumn fx:id="colPrice" text="Suma (PLN)" prefWidth="150"/>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="150" />
+            <TableColumn fx:id="colPhone" text="Telefon" prefWidth="120" />
+        </columns>
+    </TableView>
+
+    <Button text="Zamknij" onAction="#closeWindow" prefWidth="100"/>
+</VBox>

@@ -55,7 +55,12 @@ public class HotelManager {
         return false;
     }
 
+
     public List<Integer> getFloors() {
         return floors;
+    }
+
+    public List<Reservation> getAllReservations() {
+        return allReservations;
     }
 }

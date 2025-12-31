@@ -2,7 +2,7 @@ package hotel;
 
 // Usługa SPA
 public class SpaEntry extends AdditionalService {
-    private int durationMinutes;
+    private final int durationMinutes;
 
     public SpaEntry(String name, double price, int duration) {
         super(name, price);

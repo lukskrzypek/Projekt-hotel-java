@@ -41,8 +41,8 @@
 
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <children>
-                <Button fx:id="okButton" mnemonicParsing="false"  prefWidth="80.0" text="OK" />
-                <Button fx:id="cancelButton" mnemonicParsing="false" prefWidth="80.0" text="Cancel" />
+                <Button fx:id="saveButton" mnemonicParsing="false"  prefWidth="80.0" onAction="#saveGuest" text="OK" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" prefWidth="80.0" onAction="#closeWindow" text="Cancel" />
             </children>
         </HBox>
     </children>

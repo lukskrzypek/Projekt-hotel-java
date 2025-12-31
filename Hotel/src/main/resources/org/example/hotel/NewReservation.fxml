@@ -50,7 +50,7 @@
                 <VBox spacing="5.0" GridPane.rowIndex="1">
                     <children>
                         <Label text="Do:" />
-                        <DatePicker fx:id="datePickerTo" maxWidth="1.7976931348623157E308" onAction="#daysCountRefresh" />
+                        <DatePicker fx:id="datePickerTo"  maxWidth="1.7976931348623157E308" onAction="#daysCountRefresh" />
                     </children>
                 </VBox>
 
@@ -80,7 +80,7 @@
                                 <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="Pokój:" />
-                                        <ComboBox fx:id="roomComboBox" maxWidth="1.7976931348623157E308"  />
+                                        <ComboBox fx:id="roomComboBox" onAction="#priceRefresh" maxWidth="1.7976931348623157E308"  />
                                     </children>
                                 </VBox>
                             </children>
