@@ -43,11 +43,11 @@ public class ReservationListController {
         colPrice.setCellValueFactory(data ->
                 new SimpleStringProperty(String.format("%.2f PLN", data.getValue().calculateTotalCost())));
 
-        // Email
+        // 5. Email
         colEmail.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getGuest().getEmail()));
 
-        //Telefon
+        // 6. Telefon
         colPhone.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getGuest().getPhoneNumber()));
     }

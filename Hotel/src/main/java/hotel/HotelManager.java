@@ -34,14 +34,6 @@ public class HotelManager {
                 .collect(Collectors.toList());
     }
 
-    public Room getRoomByNumber(int number) {
-        return allRooms.stream()
-                .filter(room -> room.getRoomNumber() == number)
-                .findFirst()
-                .orElse(null); // Zwróci null, jeśli pokój o takim numerze nie istnieje
-    }
-
-
     // Kluczowa metoda dla kalendarza na mapie
     public boolean isRoomOccupiedOn(Room room, LocalDate date) {
         for (Reservation res : allReservations) {

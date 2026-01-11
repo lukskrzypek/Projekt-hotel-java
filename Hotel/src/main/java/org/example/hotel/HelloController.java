@@ -18,18 +18,18 @@ public class HelloController {
     @FXML private FlowPane roomsContainer; // To jest ten szary obszar z FXML
     @FXML public Button listaRezerwacjiButton;
 
-    private HotelManager manager = new HotelManager();
+    private final HotelManager manager = new HotelManager();
 
     @FXML
     public void initialize() {
 
-        viewDatePicker.setOnAction(e -> renderMap());
+        viewDatePicker.setOnAction(_ -> renderMap());
         floorComboBox.getItems().setAll(manager.getFloors());
         floorComboBox.getSelectionModel().selectFirst();
         viewDatePicker.setValue(LocalDate.now());
 
         // Akcja przy zmianie piętra
-        floorComboBox.setOnAction(e -> renderMap());
+        floorComboBox.setOnAction(_ -> renderMap());
 
         renderMap();
     }
@@ -66,7 +66,6 @@ public class HelloController {
         Parent root = loader.load();
         NewReservationController secondaryController = loader.getController();
         secondaryController.setMainController(this);
-        secondaryController.setManager(this.manager);
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
@@ -79,6 +78,12 @@ public class HelloController {
         stage.setMaxWidth(400);
         stage.setMinHeight(600);
         stage.setMaxHeight(600);
+
+
+    }
+
+    public HotelManager getManager() {
+        return this.manager;
     }
 
     public void dodajRezerwacje(Reservation reservation, Room room) {

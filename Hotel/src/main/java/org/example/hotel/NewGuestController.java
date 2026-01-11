@@ -44,13 +44,11 @@ public class NewGuestController {
             return;
         }
 
-        if (!firstName.isEmpty() && !lastName.isEmpty()) {
-            Guest newGuest = new Guest(firstName, lastName, email , phoneNumber);
+        Guest newGuest = new Guest(firstName, lastName, email , phoneNumber);
 
-            reservationController.addNewGuestToList(newGuest);
+        reservationController.addNewGuestToList(newGuest);
+        closeWindow();
 
-            closeWindow();
-        }
     }
 
     @FXML

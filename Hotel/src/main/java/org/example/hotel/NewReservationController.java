@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,32 +28,45 @@ public class NewReservationController {
     @FXML private DatePicker datePickerTo;
     @FXML private ComboBox<Room> roomComboBox;
     @FXML private ComboBox<Integer> floorComboBox;
+    @FXML private Button okButton;
+    @FXML private HBox spaDurationContainer;
     
 
     private HelloController mainController;
     private HotelManager manager;
 
-    //Manager to taka nasza baza danych i w tym momencie je przesylamy pomiędzy kontrolerami
     public void setMainController(HelloController mainController) {
         this.mainController = mainController;
-    }
-    public void setManager(HotelManager manager) {
-        this.manager = manager;
+        this.manager = mainController.getManager();
 
-        //Ładuje początkowe dane (te które pobieram z managera)
-        //To mogło by znajdować się w initialize gdyby nie to że manager przypisywany jest pozniej
-        floorComboBox.getItems().setAll(manager.getFloors());
-        floorComboBox.getSelectionModel().selectFirst();
-        roomComboBoxRefresh();
-    }
+        if (this.manager != null) {
+            // Ładujemy piętra
+            floorComboBox.getItems().setAll(manager.getFloors());
 
+            if (!floorComboBox.getItems().isEmpty()) {
+                floorComboBox.getSelectionModel().selectFirst();
+                // Wymuszamy pokazanie wartości, żeby okienko nie było puste
+                floorComboBox.setValue(floorComboBox.getSelectionModel().getSelectedItem());
+            }
+
+            roomComboBoxRefresh();
+        }
+    }
 
     @FXML
     public void initialize() {
+
+        okButton.disableProperty().bind(
+                guestComboBox.valueProperty().isNull().or(roomComboBox.valueProperty().isNull())
+        );
+
+        datePickerFrom.getEditor().setEditable(false);
+        datePickerTo.getEditor().setEditable(false);
+        spaDurationContainer.disableProperty().bind(spaCheckBox.selectedProperty().not());
+        vegetarianCheckBox.disableProperty().bind(mealPackageCheckBox.selectedProperty().not());
+
         setDateDefault();
         roomNameConverter();
-
-
     }
 
     private void setDateDefault(){
@@ -76,7 +90,7 @@ public class NewReservationController {
         priceRefresh();
     }
 
-    //Zmiana nazwy wyświetlanej w combobx na 'Pokój nr ...'
+    //Zmiana nazwy wyświetlanej w combobox na 'Pokój nr ...'
     private void roomNameConverter() {
         roomComboBox.setConverter(new StringConverter<Room>() {
             @Override
@@ -111,8 +125,11 @@ public class NewReservationController {
 
     @FXML
     private void roomComboBoxRefresh() {
-        Room previouslySelectedRoom = roomComboBox.getValue();
+        if (floorComboBox == null || floorComboBox.getValue() == null) {
+            return; // Zabezpieczenie przed błędem przy ładowaniu
+        }
 
+        Room previouslySelectedRoom = roomComboBox.getValue();
         List<Room> allRoomsOnFloor = manager.getRoomsForFloor(floorComboBox.getValue());
 
         // 2. Sprawdzamy, ilu gości mamy obecnie na liście w ComboBoxie
@@ -172,9 +189,10 @@ public class NewReservationController {
     @FXML
     private void priceRefresh(){
         Reservation res = newReservationTemp();
-        res.calculateTotalCost();
-        priceTextField.setText(res.calculateTotalCost()*Integer.parseInt(dayCountTextField.getText()) + " PLN");
 
+        if (res == null) return;
+        double totalCost = res.calculateTotalCost();
+        priceTextField.setText(totalCost + " PLN");
     }
 
 

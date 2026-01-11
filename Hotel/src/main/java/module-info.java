@@ -14,4 +14,5 @@ module org.example.hotel {
 
     opens org.example.hotel to javafx.fxml;
     exports org.example.hotel;
+    exports hotel;
 }

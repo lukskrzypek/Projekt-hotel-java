@@ -9,10 +9,6 @@ public abstract class AdditionalService {
         this.price = price;
     }
 
-    public String getName() {
-        return serviceName;
-    }
-
     public double getPrice() {
         return price;
     }
