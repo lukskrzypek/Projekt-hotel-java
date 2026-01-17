@@ -1,44 +1,40 @@
-```
 @startuml
 
-' Ustawienia stylistyczne, aby diagram wyglądał nowocześnie
 skinparam classAttributeIconSize 0
 skinparam monochrome false
 skinparam shadowing true
 skinparam linetype ortho
 
-title Diagram Klas: System Rezerwacji Hotelowej (Java context)
+title Diagram Klas: System Rezerwacji Hotelowej
 
-' Klasy bazowe i abstrakcyjne
 abstract class AdditionalService {
   - String serviceName
   - double price
-  + AdditionalService(String name, double price)
+  + AdditionalService(String serviceName, double price)
   + getPrice(): double
-  + getName(): String
 }
 
-' Konkretne implementacje usług
 class SpaEntry extends AdditionalService {
   - int durationMinutes
   + SpaEntry(String name, double price, int duration)
+  + getDurationMinutes(): int
 }
 
 class MealPackage extends AdditionalService {
   - boolean isVegetarian
-  + MealPackage(String name, double price, boolean veg)
+  + MealPackage(String name, double price, boolean isVegetarian)
+  + isVegetarian(): boolean
 }
 
-' Główne klasy domenowe
 class Guest {
-  - Long id
   - String firstName
   - String lastName
   - String email
   - String phoneNumber
-  + Guest(String fname, String lname, String email)
+  + Guest(String firstName, String lastName, String email, String phoneNumber)
   + getFullName(): String
-  + updateContactInfo(String email, String phone)
+  + getEmail(): String
+  + getPhoneNumber(): String
 }
 
 class RoomType {
@@ -46,43 +42,46 @@ class RoomType {
   - String description
   - double basePricePerNight
   - int maxCapacity
+  + RoomType(String name, String desc, double price, int capacity)
+  + getTypeName(): String
+  + getDescription(): String
   + getBasePrice(): double
+  + getMaxCapacity(): int
 }
 
 class Room {
   - int roomNumber
   - int floor
   - boolean isAvailable
-  + occupy()
-  + release()
+  - RoomType roomType
+  + Room(int roomNumber, int floor, RoomType roomType)
+  + getRoomNumber(): int
+  + getFloor(): int
   + isAvailable(): boolean
+  + occupy(): void
+  + release(): void
+  + getRoomType(): RoomType
 }
 
 class Reservation {
-  - String reservationId
+  - Room room
+  - Guest guest
   - LocalDate checkInDate
   - LocalDate checkOutDate
-  - LocalDateTime createdAt
-  - String reservationStatus
+  - List<AdditionalService> services
+  + Reservation(Room room, Guest guest, LocalDate checkIn, LocalDate checkOut)
+  + addService(AdditionalService service): void
   + calculateTotalCost(): double
-  + confirm()
-  + cancel()
-  + addService(AdditionalService service)
+  + getCheckInDate(): LocalDate
+  + getCheckOutDate(): LocalDate
+  + getRoom(): Room
+  + getGuest(): Guest
 }
 
-' Definiowanie relacji (Asocjacje, Agregacje, Kompozycje)
-
-' Pokój ma określony typ (wiele pokoi może mieć ten sam typ)
+' Relacje
 Room "*" --> "1" RoomType : has type >
-
-' Gość składa rezerwacje (jeden gość, wiele rezerwacji)
-Guest "1" -- "*" Reservation : makes >
-
-' Rezerwacja dotyczy konkretnego pokoju
+Guest "1" <-- "*" Reservation : associated guest <
 Reservation "*" --> "1" Room : books >
-
-' Rezerwacja zawiera listę usług dodatkowych (Agregacja)
 Reservation "1" o-- "*" AdditionalService : includes services >
 
 @enduml
-```
