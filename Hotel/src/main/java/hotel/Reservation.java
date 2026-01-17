@@ -27,10 +27,9 @@ public class Reservation {
     public double calculateTotalCost() {
         // Obliczamy liczbę nocy
         long nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-        if (nights <= 0) nights = 1; // Minimalna opłata za 1 dobę
 
         // Koszt pokoju
-        double total = nights * room.getRoomType().getBasePrice();
+        double total = (nights + 1) * room.getRoomType().getBasePrice();
 
         // Koszt usług dodatkowych
         for (AdditionalService service : services) {
