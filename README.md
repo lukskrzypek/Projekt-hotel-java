@@ -1,3 +1,4 @@
+```
 @startuml
 
 skinparam classAttributeIconSize 0
@@ -85,3 +86,4 @@ Reservation "*" --> "1" Room : books >
 Reservation "1" o-- "*" AdditionalService : includes services >
 
 @enduml
+```
