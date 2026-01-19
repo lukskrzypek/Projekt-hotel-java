@@ -267,7 +267,7 @@ NewGuestController -> Guest: new Guest(firstName, lastName, email, phone)
 NewGuestController -> NewReservationController: addNewGuestToList(newGuest)
 NewReservationController -> NewReservationController: guestComboBox.add(newGuest)
 NewReservationController -> NewReservationController: roomComboBoxRefresh()
-note right: Odświeżenie listy pokoi pod kątem pojemności
+note right: Odświeżenie listy pokoi
 
 NewGuestController -> NewGuestController: closeWindow()
 @enduml
